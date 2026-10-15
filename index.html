@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eagle Master Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/admin.css" />
+
+    <script>
+        window.RUNTIME_CONFIG = {
+            API_BASE: 'https://sharpness-payhero-backend.onrender.com'
+        };
+    </script>
+</head>
+<body>
+
+<!-- ============ LOGIN VIEW ============ -->
+<section class="login-view" id="loginView">
+    <div class="login-card">
+        <div class="login-brand">
+            <div class="brand-icon"><i class="fas fa-dove"></i></div>
+            <h1>Eagle Master</h1>
+            <p>Admin Control Panel</p>
+        </div>
+
+        <form id="loginForm" autocomplete="on">
+            <div class="form-group">
+                <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                <div class="input-wrapper">
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="username" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <span class="btn-text">Sign In</span>
+                <span class="spinner"></span>
+            </button>
+        </form>
+
+        <div class="status" id="loginStatus"></div>
+    </div>
+</section>
+
+<!-- ============ DASHBOARD VIEW ============ -->
+<section class="dashboard-view hidden" id="dashboardView">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon-small"><i class="fas fa-dove"></i></div>
+            <span>Eagle Master</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fas fa-chart-pie"></i> Overview
+            </a>
+            <a href="#" class="nav-item" data-view="transactions">
+                <i class="fas fa-receipt"></i> Transactions
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-info">
+                <div class="admin-avatar" id="adminAvatar">D</div>
+                <div class="admin-meta">
+                    <span class="admin-name" id="adminName">Admin</span>
+                    <span class="admin-email" id="adminEmail">—</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2 id="pageTitle">Overview</h2>
+            <button class="refresh-btn" id="refreshBtn" aria-label="Refresh">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </header>
+
+        <!-- OVERVIEW SUBVIEW -->
+        <div class="view-content" id="overviewView">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Total Transactions</span>
+                        <span class="stat-value" id="statTotal">—</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Successful</span>
+                        <span class="stat-value" id="statSuccessCount">—</span>
+                        <span class="stat-sub" id="statSuccessSum">—</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon danger"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Failed</span>
+                        <span class="stat-value" id="statFailed">—</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Pending</span>
+                        <span class="stat-value" id="statPending">—</span>
+                    </div>
+                </div>
+                <div class="stat-card wide">
+                    <div class="stat-icon accent"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Success Rate</span>
+                        <span class="stat-value" id="statRate">—</span>
+                    </div>
+                </div>
+                <div class="stat-card wide">
+                    <div class="stat-icon accent"><i class="fas fa-calendar-day"></i></div>
+                    <div class="stat-meta">
+                        <span class="stat-label">Today</span>
+                        <span class="stat-value" id="statToday">—</span>
+                        <span class="stat-sub" id="statTodaySum">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="recentTable">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Phone</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSACTIONS SUBVIEW -->
+        <div class="view-content hidden" id="transactionsView">
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <input type="text" id="filterSearch" placeholder="Search reference or name..." />
+                </div>
+                <div class="filter-group">
+                    <select id="filterStatus">
+                        <option value="">All Statuses</option>
+                        <option value="success">Success</option>
+                        <option value="failed">Failed</option>
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select id="filterProvider">
+                        <option value="">All Providers</option>
+                        <option value="m-pesa">M-Pesa</option>
+                        <option value="airtel">Airtel</option>
+                        <option value="card">Card</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="date" id="filterFrom" />
+                </div>
+                <div class="filter-group">
+                    <input type="date" id="filterTo" />
+                </div>
+                <button class="btn-secondary" id="clearFilters">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+
+            <div class="panel">
+                <div class="table-wrap">
+                    <table class="data-table" id="txTable">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Amount</th>
+                                <th>Provider</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <button class="page-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <span class="page-info" id="pageInfo">Page 1</span>
+                    <button class="page-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
+<!-- ============ DETAIL DRAWER ============ -->
+<div class="drawer-overlay" id="drawerOverlay">
+    <div class="drawer">
+        <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
+        <div class="drawer-body" id="drawerBody"></div>
+    </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<script src="./js/admin.js"></script>
+</body>
+</html>
